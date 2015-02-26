@@ -54,6 +54,8 @@ def analyze_response(response):
 	print("actual type: {0}".format(type(response)))
         raise Exception("input not a string")
 
+    # create dictionary to collect the stats
+    ling_stats = dict()
 
     tokens = nltk.word_tokenize(response)
     freq_dist = nltk.FreqDist(tokens)
@@ -65,7 +67,12 @@ def analyze_response(response):
     #print('collocations: {0}'.format(collocations))
     freq_dist_word_lengths = nltk.FreqDist(len(w) for w in tokens)
     print('frequency distribution of word lengths: {0}'.format(freq_dist_word_lengths.most_common(1)))
-    return tokens.count('i')
+    ling_stats['most common single word'] = freq_dist.most_common(1)
+    ling_stats['most frequent bigram'] = freq_dist_biagrams.most_common(1) 
+    ling_stats['frequency distribution of word lengths'] = freq_dist_word_lengths.most_common(1) 
+    ling_stats['number of time you said the word I'] = tokens.count('i') 
+
+    return ling_stats
 
 def decode_speech_driver(wavfile, outfile):
     
@@ -83,9 +90,11 @@ def decode_speech_driver(wavfile, outfile):
         print(e)
 
     with open(outfile, 'rb') as speech_file:
-	speech = speech_file.readlines()
-	i_count = analyze_response(speech[0])
-        return speech, i_count
+	speech = ''.join(speech_file.readlines())
+	ling_stats = analyze_response(speech)
+	rtn_dict = dict()
+	rtn_dict['speech'] = speech
+	return dict(rtn_dict.items() + ling_stats.items())
 
 
 if __name__ == "__main__":

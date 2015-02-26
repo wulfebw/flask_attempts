@@ -82,17 +82,23 @@ def upload():
 	filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 	outfilename = '/home/ec2-user/flask_attempts/data/test.txt'
 	
+	# create a dictionary to pass to the template
+	stats = dict()
+	
+	
 	# decode the speech in the file
-	speech, i_count = decode_speech_driver(filename, outfilename)
+	ling_stats = decode_speech_driver(filename, outfilename)
 	
 	end = time.time()
 	total_time =round(end - start)
 
+	stats['time_to_analyze'] = total_time
+
+	# combine the different stats to display in the template
+	stats = dict(stats.items() + ling_stats.items())
+
 	# render the speech as text on a different page	
-	return render_template('decoded_speech.html',
-				 speech=speech, 
-				i_count=i_count,
-				total_time=total_time)	 	
+	return render_template('decoded_speech.html', stats=stats)	 	
 
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
