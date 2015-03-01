@@ -1,5 +1,20 @@
+
 <div>
-	{% for label, value in stats.iteritems() %}
-		<p>{{ label }} : {{ value }}</p>
-	{% endfor%}
+     	{% for label, value in stats.iteritems() %}
+                <p>{{ label }} : {{ value }}</p>
+        {% endfor%}
 <div>
+
+<div>
+    <form action="\uploads\{{audio_filename}}" method="get" target="_blank">
+        <input type="submit" value="listen to audio">
+    </form>
+</div>
+
+<div>
+    <form action="\uploads\{{video_filename}}" method="get" target="_blank">
+        <input type="submit" value="watch video">
+    </form>
+</div>
+
+

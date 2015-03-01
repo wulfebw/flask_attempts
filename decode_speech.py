@@ -8,6 +8,8 @@ source: http://stackoverflow.com/questions/14307816/live-recognition-with-python
 import sys
 import os
 import subprocess
+import pocketsphinx
+import sphinxbase
 
 
 try:
@@ -86,11 +88,12 @@ def decode_speech_driver(wavfile, outfile):
         NULL = open(os.devnull, 'w')    # add:  stdout=FNULL    when it works
         subprocess.call(call_str, shell=True, stderr=subprocess.STDOUT)
     except Exception as e:
-        print("Something went wrong")
-        print(e)
+        print("Something went wrong - decode speech driver")
+        raise Exception(e)
 
     with open(outfile, 'rb') as speech_file:
 	speech = ''.join(speech_file.readlines())
+	print("SPEECH_DECODE: {0}".format(speech))
 	ling_stats = analyze_response(speech)
 	rtn_dict = dict()
 	rtn_dict['speech'] = speech
@@ -102,7 +105,7 @@ if __name__ == "__main__":
     hmm = '/home/ec2-user/download/cmusphinx-5prealpha-en-us-2.0'
     lm = "/home/ec2-user/download/cmusphinx-5.0-en-us.lm.dmp"
     dic = "/home/ec2-user/download/pocketsphinx-0.8/model/lm/en_US/hub4.5000.dic"
-    wavfile = "/home/ec2-user/data/test.wav"
+    wavfile = "/home/ec2-user/flask_attempts/uploads/blob_audio_mono.wav"
     result = decode_speech(hmm,lm,dic,wavfile)
     print('\nresult: {0}\n'.format(result))
     analyze_response(result[0])
