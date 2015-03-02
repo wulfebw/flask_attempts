@@ -38,7 +38,7 @@ except:
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug import secure_filename
 from werkzeug.contrib.fixers import ProxyFix
-from decode_speech import decode_speech_driver
+from decode_speech import decode_speech_driver, decode_speech
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -126,23 +126,27 @@ def upload():
         # return redirect(url_for('uploaded_file',
         #                         filename=filename))
     if audio:
-        filename = secure_filename(video.filename) + '_audio'+  '.wav' #.mp3?
-        audio_filename = new_filename(filename, "_mono")
-	audio.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        app.logger.warning("filename: {0}".format(filename))
-        stereo_to_mono(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-	filename = new_filename(filename, "_mono")
-	filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        audio_filename = secure_filename(audio.filename) + '_audio'+  '.wav' #.mp3?
+	print("AUDIO_1!!!: {0}".format(audio_filename))
+#        audio_filename = new_filename(filename, "_mono")
+	audio.save(os.path.join(app.config['UPLOAD_FOLDER'], audio_filename))
+        app.logger.warning("filename: {0}".format(audio_filename))
+        stereo_to_mono(os.path.join(app.config['UPLOAD_FOLDER'], audio_filename))
+	audio_filename = new_filename(audio_filename, "_mono")
+	audio_filename = os.path.join(app.config['UPLOAD_FOLDER'], audio_filename)
         outfilename = '/home/ec2-user/flask_attempts/data/test.txt'
         stats = dict()
 	# decode the speech in the file
-        ling_stats = decode_speech_driver(filename, outfilename)
+        #ling_stats = decode_speech_driver(filename, outfilename)
+	ling_stats = decode_speech(audio_filename)	
 
         end = time.time()
         total_time =round(end - start)
 
+
         stats['time_to_analyze'] = total_time
-	stats['total speech time'] = get_duration(filename)
+	print("AUDIO_2!!!: {0}".format(audio_filename))
+	stats['total speech time'] = get_duration(audio_filename)
         # combine the different stats to display in the template
         stats = dict(stats.items() + ling_stats.items())
 	

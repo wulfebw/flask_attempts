@@ -33,7 +33,8 @@ def new_filename(orig, to_add):
 def stereo_to_mono(filename):
 	try:
 		samp_rate = 16000
-		call_str = "/usr/local/bin/sox {0} -r {2} {1} channels 1".format(filename, new_filename(filename, '_mono'), samp_rate)
+		speed = 2.75625
+		call_str = "/usr/local/bin/sox -r {2} {0} {1} channels 1 speed {3}".format(filename, new_filename(filename, '_mono'), samp_rate, speed)
 		log_stuff('call string: {0}'.format(call_str))
 		subprocess.call(call_str, shell=True, stderr=subprocess.STDOUT)
 	except Exception as e:

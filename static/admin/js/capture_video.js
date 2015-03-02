@@ -29,10 +29,10 @@ through the process of actually collecting the audio and video.
 */
 function successCallback(mediaStream){
   playVideo(mediaStream);
-
-  var recordAudioRTC = RecordRTC(mediaStream);
-  var options = {type: 'video'};
-  var recordVideoRTC = RecordRTC(mediaStream, options);
+  var options_audio = {'sample-rate': 44100};
+  var recordAudioRTC = RecordRTC(mediaStream, options_audio);
+  var options_video = {type: 'video'};
+  var recordVideoRTC = RecordRTC(mediaStream, options_video);
   recordAudioRTC.startRecording();
   recordVideoRTC.startRecording();
 
