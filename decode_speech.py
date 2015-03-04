@@ -78,9 +78,14 @@ def decode_speech(wavfile,
     wavFile.seek(100)
     speechRec.decode_raw(wavFile)
     result = speechRec.get_hyp()
-    rtn_dict = dict()
-    rtn_dict['speech'] = result
-    return rtn_dict
+    print(type(result))
+    print(result)
+    speech = result[0]
+    ling_stats = analyze_response(speech)
+#    rtn_dict = dict()
+#    rtn_dict['speech'] = speech
+    ling_stats['speech'] = speech
+    return ling_stats
 
 
 def decode_speech_driver(wavfile, outfile):
@@ -112,10 +117,10 @@ if __name__ == "__main__":
     hmm = '/home/ec2-user/download/cmusphinx-5prealpha-en-us-2.0'
     lm = "/home/ec2-user/download/cmusphinx-5.0-en-us.lm.dmp"
     dic = "/home/ec2-user/download/pocketsphinx-0.8/model/lm/en_US/hub4.5000.dic"
-    wavfile = "/home/ec2-user/flask_attempts/uploads/audio_test_5.wav"
+    wavfile = "/home/ec2-user/flask_attempts/uploads/audio_test_1.wav"
     result = decode_speech(wavfile, hmm, lm, dic)
 #    print('\nresult: {0}\n'.format(result))
 #    analyze_response(result)
     result_2 = decode_speech_driver(wavfile, 'data/audio_test_2_out.txt')
-    print('\nresult: {0}\n'.format(result))
-    print('\nresult: {0}\n'.format(result_2))
+    print('\nresult_PS_Import: {0}\n'.format(result))
+    print('\nresult_PS_Continuous: {0}\n'.format(result_2))
